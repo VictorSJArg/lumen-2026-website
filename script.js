@@ -72,21 +72,34 @@ if (form && note) {
         message: message
       };
 
-      await emailjs.send(
-        "service_jntry55",
-        "template_iupf74m",
-        templateParams,
-        "sHnF5U9PO99FOUM4D"
-      );
+      // Usamos el método send de emailjs (asegurándonos de que esté cargado)
+      if (typeof emailjs !== 'undefined') {
+        await emailjs.send(
+          "service_jntry55",
+          "template_iupf74m",
+          templateParams,
+          "sHnF5U9PO99FOUM4D"
+        );
+      } else {
+        throw new Error("El servicio de correo no se cargó correctamente.");
+      }
 
       note.textContent = "¡Mensaje enviado y guardado con éxito! Nos contactaremos pronto.";
-      note.style.color = "#10b981"; // Color verde éxito
+      note.style.color = "#10b981";
       form.reset();
 
     } catch (error) {
-      console.error("Error al guardar en Firebase:", error);
-      note.textContent = "Hubo un error al guardar el mensaje. Por favor, intenta nuevamente.";
-      note.style.color = "#ef4444"; // Color rojo error
+      console.error("Error detallado:", error);
+      
+      let errorMsg = "Hubo un error al procesar tu mensaje.";
+      if (error.code === 'permission-denied') {
+        errorMsg = "Error de permisos en Firebase. Por favor, revisa las Reglas de Firestore.";
+      } else if (error.status === 404 || error.text === 'The user ID is invalid') {
+        errorMsg = "Error en la configuración de EmailJS (IDs incorrectos).";
+      }
+      
+      note.textContent = `${errorMsg} (Detalle: ${error.message || error.text || 'Error desconocido'})`;
+      note.style.color = "#ef4444";
     } finally {
       if (submitButton) submitButton.disabled = false;
     }
