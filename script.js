@@ -72,13 +72,13 @@ if (form && note) {
         message: message
       };
 
-      // Usamos el método send de emailjs (asegurándonos de que esté cargado)
+      // Usamos el método send de emailjs
       if (typeof emailjs !== 'undefined') {
         await emailjs.send(
           "service_jntry55",
-          "template_iupf74m",
+          "template_hz6iscm",
           templateParams,
-          "sHnF5U9PO99FOUM4D"
+          "sHnF5U9P099FOUM4D"
         );
       } else {
         throw new Error("El servicio de correo no se cargó correctamente.");
