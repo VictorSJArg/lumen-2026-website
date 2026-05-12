@@ -38,6 +38,6 @@ if (form && note) {
     );
 
     note.textContent = "Abriendo tu cliente de correo para enviar la consulta.";
-    window.location.href = `mailto:contacto@lumenstrategy.com?subject=${subject}&body=${body}`;
+    window.location.href = `mailto:lumenstrategyvdl@gmail.com?subject=${subject}&body=${body}`;
   });
 }
