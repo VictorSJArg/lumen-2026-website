@@ -55,7 +55,7 @@ if (form && note) {
     const message = String(data.get("message") || "").trim();
 
     try {
-      // Guardar en Firebase Firestore
+      // 1. Guardar en Firebase Firestore
       await addDoc(collection(db, "contactos"), {
         nombre: name,
         email: email,
@@ -64,18 +64,24 @@ if (form && note) {
         fecha: serverTimestamp()
       });
 
+      // 2. Enviar correo automático via EmailJS
+      const templateParams = {
+        name: name,
+        email: email,
+        phone: phone,
+        message: message
+      };
+
+      await emailjs.send(
+        "service_jntry55",
+        "template_iupf74m",
+        templateParams,
+        "sHnF5U9PO99FOUM4D"
+      );
+
       note.textContent = "¡Mensaje enviado y guardado con éxito! Nos contactaremos pronto.";
       note.style.color = "#10b981"; // Color verde éxito
       form.reset();
-
-      // Opcional: Abrir mailto como respaldo
-      const subject = encodeURIComponent(`Consulta desde la web - ${name}`);
-      const body = encodeURIComponent(
-        `Nombre: ${name}\nEmail: ${email}\nTelefono: ${phone || "No informado"}\n\nMensaje:\n${message}`
-      );
-      setTimeout(() => {
-        window.location.href = `mailto:lumenstrategyvdl@gmail.com?subject=${subject}&body=${body}`;
-      }, 1500);
 
     } catch (error) {
       console.error("Error al guardar en Firebase:", error);
